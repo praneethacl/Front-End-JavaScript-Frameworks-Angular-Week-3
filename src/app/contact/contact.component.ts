@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Leader } from '../shared/leader';
-import { LeaderService } from '../services/leader.service';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Feedback, ContactType } from '../shared/feedback';
 
 @Component({
   selector: 'app-contact',
@@ -10,15 +9,33 @@ import { LeaderService } from '../services/leader.service';
 })
 export class ContactComponent implements OnInit {
 
-  leaders: Leader[];
+  feedbackForm: FormGroup;
+  feedback: Feedback;
+  contactType = ContactType;
 
-  //selectedDish: Dish;
-
-
-  constructor(private leaderService: LeaderService) { }
+  constructor(private fb: FormBuilder) {
+    this.createForm();
+  }
 
   ngOnInit() {
-    this.leaders = this.leaderService.getLeaders();
+  }
+
+  createForm() {
+    this.feedbackForm = this.fb.group({
+      firstname: '',
+      lastname: '',
+      telnum: 0,
+      email: '',
+      agree: false,
+      contacttype: 'None',
+      message: ''
+    });
+  }
+
+  onSubmit() {
+    this.feedback = this.feedbackForm.value;
+    console.log(this.feedback);
+    this.feedbackForm.reset();
   }
 
 
