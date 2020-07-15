@@ -20,19 +20,11 @@ export class DishdetailComponent implements OnInit {
   next: string;
   commentForm: FormGroup;
   commentf: Comment;
+  dishcopy: Dish;
 
   @ViewChild('fform') feedbackFormDirective;
 
-  ngOnInit() {
-    this.createForm();
-
-    this.dishservice.getDishIds()
-      .subscribe((dishIds) => this.dishIds = dishIds);
-    this.route.params
-      .pipe(switchMap((params: Params) => this.dishservice.getDish(params['id'])))
-      .subscribe(dish => {this.dish = dish; this.setPrevNext(dish.id); },
-      errmess => this.errMess = <any>errmess);
-  }
+  
   formErrors = {
     'author': '',
     'comment': '',
@@ -67,7 +59,18 @@ export class DishdetailComponent implements OnInit {
       .subscribe(data =>this.onValueChanged(data));
 
       this.onValueChanged();
-    };      
+    };  
+    ngOnInit() {
+      this.createForm();
+  
+      this.dishservice.getDishIds()
+        .subscribe((dishIds) => this.dishIds = dishIds);
+      this.route.params
+        .pipe(switchMap((params: Params) => this.dishservice.getDish(params['id'])))
+        .subscribe(dish => {this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); },
+        errmess => this.errMess = <any>errmess);
+    }
+
     onValueChanged(data?: any) {
       if (!this.commentForm) { return; }
       const form = this.commentForm;
@@ -94,7 +97,13 @@ export class DishdetailComponent implements OnInit {
       let currentDate = new Date().toISOString();
       this.commentf.date = currentDate;
       //console.log(this.commentf);
-      this.dish.comments.push(this.commentf);
+      this.dishcopy.comments.push(this.commentf);
+      this.dishservice.putDish(this.dishcopy)
+        .subscribe(dish => {
+          this.dish = dish;
+          this.dishcopy = dish;
+        },
+        errmess => {this.dish = null; this.dishcopy = null; this.errMess = <any>errmess});
       this.commentForm.reset({
         author: '',
         rating: 5,
