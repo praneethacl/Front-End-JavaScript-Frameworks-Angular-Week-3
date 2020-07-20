@@ -33,14 +33,19 @@
       <h3>{{promotion.name | uppercase}}</h3>
     </mat-card-title>
   </mat-card-header>
-  <img mat-card-image src={{promotion.image}} alt={{promotion.name}}>
+  <img mat-card-image src="{{BaseURL + promotion.image}}" alt={{promotion.name}}>
   <mat-card-content>
     <p>{{promotion.description}}
     </p>
   </mat-card-content>
 </mat-card>
-<div fxFlex [hidden]='promotion'>
+<div fxFlex [hidden]='promotion || promotionErrMess'>
   <mat-spinner></mat-spinner><h4>Loading .....</h4>
+</div>
+<div fxFlex *ngIf="promotionErrMess">
+  <h2>Error</h2>
+  <h4 style="color: brown;">{{promotionErrMess}}</h4>
+
 </div>
 <mat-card *ngIf="leaders" fxFlex [@expand]>
   <mat-card-header>
@@ -49,13 +54,18 @@
       <h3>{{leaders.name | uppercase}}</h3>
     </mat-card-title>
   </mat-card-header>
-  <img mat-card-image src={{leaders.image}} alt={{leaders.name}}>
+  <img mat-card-image src="{{BaseURL + leaders.image}}" alt={{leaders.name}}>
   <mat-card-content>
     <p>{{leaders.description}}
     </p>
   </mat-card-content>
 </mat-card>
-<div fxFlex [hidden]='leaders'>
+<div fxFlex [hidden]='leaders || leaderErrMess'>
   <mat-spinner>LAAAAAA</mat-spinner><h4>Loading .....</h4>
+</div>
+<div fxFlex *ngIf="leaderErrMess">
+  <h2>Error</h2>
+  <h4 style="color: brown;">{{leaderErrMess}}</h4>
+
 </div>
 </div>
